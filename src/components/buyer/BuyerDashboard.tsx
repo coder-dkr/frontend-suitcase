@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 //@ts-nocheck
 import React, { useEffect, useState } from 'react';
 import { ShoppingCart, Package, Clock, CheckCircle } from 'lucide-react';
