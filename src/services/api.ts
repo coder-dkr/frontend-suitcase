@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { AuthResponse, ApiResponse, Product, Order, User, DashboardStats } from '../types';
 
-const API_BASE_URL = 'http://localhost:5100/api/v1';
-// const API_BASE_URL = 'https://suiticase-backend.onrender.com/api/v1';
+// const API_BASE_URL = 'http://localhost:5100/api/v1';
+const API_BASE_URL = 'https://suiticase-backend.onrender.com/api/v1';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
