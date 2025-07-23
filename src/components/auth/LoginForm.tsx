@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
-import { authAPI } from '../../services/api';
-import { useAuth } from '../../context/AuthContext';
-import toast from 'react-hot-toast';
-import LoadingSpinner from '../common/LoadingSpinner';
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { Link, useNavigate } from "react-router-dom";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { authAPI } from "../../services/api";
+import { useAuth } from "../../context/AuthContext";
+import toast from "react-hot-toast";
+import LoadingSpinner from "../common/LoadingSpinner";
 
 const schema = yup.object({
-  email: yup.string().email('Invalid email').required('Email is required'),
-  password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
+  email: yup.string().email("Invalid email").required("Email is required"),
+  password: yup
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
 });
 
 type FormData = yup.InferType<typeof schema>;
@@ -34,27 +37,33 @@ const LoginForm: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await authAPI.login(data);
-      if (response.data.success && response.data.data.token && response.data.data.user) {
+      if (
+        response.data.success &&
+        response.data.data.token &&
+        response.data.data.user
+      ) {
         login(response.data.data.token, response.data.data.user);
-        toast.success('Login successful!');
-        
+        toast.success("Login successful!");
+
         // Redirect based on role
-        switch (response.data.data.user.role) {
-          case 'admin':
-            navigate('/admin');
-            break;
-          case 'seller':
-            navigate('/seller');
-            break;
-          case 'buyer':
-            navigate('/buyer');
-            break;
-          default:
-            navigate('/');
+        if (response.data.success) {
+          switch (response.data.data.user.role) {
+            case "admin":
+              navigate("/admin");
+              break;
+            case "seller":
+              navigate("/seller");
+              break;
+            case "buyer":
+              navigate("/buyer");
+              break;
+            default:
+              navigate("/");
+          }
         }
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Login failed');
+      toast.error(error.response?.data?.message || "Login failed");
     } finally {
       setIsLoading(false);
     }
@@ -64,14 +73,22 @@ const LoginForm: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">Welcome Back</h2>
+          <h2 className="mt-6 text-3xl font-bold text-gray-900">
+            Welcome Back
+          </h2>
           <p className="mt-2 text-sm text-gray-600">Sign in to your account</p>
         </div>
 
-        <form className="mt-8 space-y-6 bg-white p-8 rounded-xl shadow-lg" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="mt-8 space-y-6 bg-white p-8 rounded-xl shadow-lg"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Email Address
               </label>
               <div className="relative">
@@ -79,19 +96,24 @@ const LoginForm: React.FC = () => {
                   <Mail className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
-                  {...register('email')}
+                  {...register("email")}
                   type="email"
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Enter your email"
                 />
               </div>
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.email.message}
+                </p>
               )}
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Password
               </label>
               <div className="relative">
@@ -99,8 +121,8 @@ const LoginForm: React.FC = () => {
                   <Lock className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
-                  {...register('password')}
-                  type={showPassword ? 'text' : 'password'}
+                  {...register("password")}
+                  type={showPassword ? "text" : "password"}
                   className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Enter your password"
                 />
@@ -117,7 +139,9 @@ const LoginForm: React.FC = () => {
                 </button>
               </div>
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.password.message}
+                </p>
               )}
             </div>
           </div>
@@ -127,13 +151,16 @@ const LoginForm: React.FC = () => {
             disabled={isLoading}
             className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            {isLoading ? <LoadingSpinner size="sm" /> : 'Sign In'}
+            {isLoading ? <LoadingSpinner size="sm" /> : "Sign In"}
           </button>
 
           <div className="text-center">
             <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
-              <Link to="/signup" className="font-medium text-blue-600 hover:text-blue-500">
+              Don't have an account?{" "}
+              <Link
+                to="/signup"
+                className="font-medium text-blue-600 hover:text-blue-500"
+              >
                 Sign up here
               </Link>
             </p>

@@ -8,6 +8,7 @@ import { authAPI } from '../../services/api';
 import toast from 'react-hot-toast';
 import LoadingSpinner from '../common/LoadingSpinner';
 
+
 const schema = yup.object({
   otp: yup.string().length(6, 'OTP must be 6 digits').required('OTP is required'),
 });
@@ -40,7 +41,19 @@ const OTPVerification: React.FC = () => {
       const response = await authAPI.verify({ email, otp: data.otp });
       if (response.data.success) {
         toast.success('Email verified successfully! You can now login.');
-        navigate('/login');
+        switch (response.data.data.user && response.data.data.user.role) {
+          case 'admin':
+            navigate('/admin');
+            break;
+          case 'seller':
+            navigate('/seller');
+            break;
+          case 'buyer':
+            navigate('/buyer');
+            break;
+          default:
+            navigate('/');
+        }
       }
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Verification failed');
@@ -56,8 +69,13 @@ const OTPVerification: React.FC = () => {
       if (response.data.success) {
         toast.success('New OTP sent to your email');
       }
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to resend OTP');
+    } catch (error) {
+      if (error && typeof error === 'object' && 'response' in error) {
+        // @ts-expect-error: error may be any
+        toast.error(error.response?.data?.message || 'Failed to resend OTP');
+      } else {
+        toast.error('Failed to resend OTP');
+      }
     } finally {
       setIsResending(false);
     }

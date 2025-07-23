@@ -46,7 +46,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ product, onSuccess, onCancel }) =
     setIsLoading(true);
     try {
       await buyerAPI.placeOrder({
-        productId: product._id,
+        product: product._id,
         quantity: data.quantity,
         paymentMethod: data.paymentMethod,
         shippingAddress: data.shippingAddress,
@@ -65,8 +65,8 @@ const OrderForm: React.FC<OrderFormProps> = ({ product, onSuccess, onCancel }) =
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+    <div className="max-w-2xl mx-auto ">
+      <div className="bg-white rounded-xl shadow-sm border overflow-y-scroll border-gray-200 p-8">
         <div className="flex items-center space-x-3 mb-8">
           <div className="p-2 bg-green-100 rounded-lg">
             <ShoppingCart className="h-6 w-6 text-green-600" />

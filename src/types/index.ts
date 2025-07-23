@@ -7,8 +7,7 @@ export interface User {
 }
 
 export interface Product {
-  _id: string;
-  seller: string;
+  _id?: string;
   name: string;
   description?: string;
   material: string;
@@ -20,8 +19,6 @@ export interface Product {
   isSold: boolean;
   features?: string[];
   color?: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface Order {

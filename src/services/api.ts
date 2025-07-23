@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { AuthResponse, ApiResponse, Product, Order, User, DashboardStats } from '../types';
 
-const API_BASE_URL = 'https://suiticase-backend.onrender.com/api/v1';
+const API_BASE_URL = 'http://localhost:5100/api/v1';
+// const API_BASE_URL = 'https://suiticase-backend.onrender.com/api/v1';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -26,7 +27,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.location.href = '/login';
+      // window.location.href = '/login';
     }
     return Promise.reject(error);
   }
@@ -50,7 +51,7 @@ export const sellerAPI = {
   getProducts: (page = 1, limit = 10) =>
     api.get<ApiResponse<Product[]>>(`/seller/products?page=${page}&limit=${limit}`),
   
-  createProduct: (data: Omit<Product, '_id' | 'seller' | 'createdAt' | 'updatedAt'>) =>
+  createProduct: (data: Omit<Product, '_id'>) =>
     api.post<ApiResponse<Product>>('/seller/products', data),
   
   updateProduct: (id: string, data: Partial<Product>) =>
@@ -65,19 +66,17 @@ export const sellerAPI = {
   getDashboard: () =>
     api.get<ApiResponse<DashboardStats>>('/seller/dashboard'),
   
-  bulkUpdateRates: (data: { material: string; type: 'percentage' | 'fixed'; value: number }) =>
-    api.patch<ApiResponse>('/seller/rates', data),
 };
 
 export const buyerAPI = {
   getProducts: (page = 1, limit = 10, material?: string) =>
-    api.get<ApiResponse<Product[]>>(`/products?page=${page}&limit=${limit}${material ? `&material=${material}` : ''}`),
+    api.get<ApiResponse<Product[]>>(`/products`),
   
   placeOrder: (data: { productId: string; quantity: number; paymentMethod: string; shippingAddress: string; orderNotes?: string }) =>
     api.post<ApiResponse<Order>>('/orders', data),
   
   getOrders: (page = 1, limit = 10) =>
-    api.get<ApiResponse<Order[]>>(`/orders?page=${page}&limit=${limit}`),
+    api.get<ApiResponse<Order[]>>(`/orders`),
   
   cancelOrder: (id: string) =>
     api.patch<ApiResponse<Order>>(`/orders/${id}/cancel`),
