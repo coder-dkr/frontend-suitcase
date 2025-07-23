@@ -34,12 +34,12 @@ const LoginForm: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await authAPI.login(data);
-      if (response.data.success && response.data.token && response.data.user) {
-        login(response.data.token, response.data.user);
+      if (response.data.success && response.data.data.token && response.data.data.user) {
+        login(response.data.data.token, response.data.data.user);
         toast.success('Login successful!');
         
         // Redirect based on role
-        switch (response.data.user.role) {
+        switch (response.data.data.user.role) {
           case 'admin':
             navigate('/admin');
             break;

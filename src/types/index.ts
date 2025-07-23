@@ -1,7 +1,7 @@
 export interface User {
   _id: string;
   email: string;
-  role: 'admin' | 'seller' | 'buyer';
+  role: "admin" | "seller" | "buyer";
   isVerified: boolean;
   createdAt: string;
 }
@@ -30,9 +30,9 @@ export interface Order {
   product: Product;
   quantity: number;
   totalAmount: number;
-  paymentMethod: 'cod' | 'online';
-  status: 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
-  paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
+  paymentMethod: "cod" | "online";
+  status: "pending" | "confirmed" | "shipped" | "delivered" | "cancelled";
+  paymentStatus: "pending" | "paid" | "failed" | "refunded";
   shippingAddress: string;
   orderNotes?: string;
   orderNumber?: string;
@@ -43,8 +43,10 @@ export interface Order {
 export interface AuthResponse {
   success: boolean;
   message: string;
-  token?: string;
-  user?: User;
+  data: {
+    token?: string;
+    user?: User;
+  };
 }
 
 export interface ApiResponse<T = any> {
@@ -60,9 +62,59 @@ export interface ApiResponse<T = any> {
 }
 
 export interface DashboardStats {
-  totalUsers?: number;
-  totalProducts?: number;
-  totalOrders?: number;
-  totalRevenue?: number;
-  recentActivity?: any[];
+  success: boolean;
+  message: string;
+  data: {
+    userStats: {
+      totalUsers: number;
+      verifiedUsers: number;
+      unverifiedUsers: number;
+      usersByRole: {
+        _id: string;
+        count: number;
+      }[];
+    };
+    productStats: {
+      totalProducts: number;
+      soldProducts: number;
+      availableProducts: number;
+      productsByMaterial: {
+        _id: string;
+        count: number;
+      }[];
+    };
+    orderStats: {
+      totalOrders: number;
+      pendingOrders: number;
+      completedOrders: number;
+      ordersByStatus: {
+        _id: string;
+        count: number;
+      }[];
+      totalRevenue: number;
+    };
+    recentActivities: {
+      recentUsers: {
+        _id: string;
+        email: string;
+        role: string;
+        isVerified: boolean;
+        createdAt: string;
+      }[];
+      recentOrders: {
+        _id: string;
+        buyer: {
+          _id: string;
+          email: string;
+        };
+        product: {
+          _id: string;
+          name: string;
+        };
+        totalAmount: number;
+        status: string;
+        createdAt: string;
+      }[];
+    };
+  };
 }
